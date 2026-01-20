@@ -23,12 +23,59 @@
             color: var(--text-bright);
             min-height: 100vh;
             overflow-x: hidden;
-            /* Fondo degradado profundo estilo noche */
             background: radial-gradient(circle at center, #3d1f27 0%, var(--deep-bg) 100%);
             background-attachment: fixed;
         }
 
-        /* CAPA CORAZONES CON GLOW MEJORADO */
+        /* VERIFICACIÓN DE SEGURIDAD (STREET TACO) */
+        #security-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: radial-gradient(circle at center, #3d1f27 0%, var(--deep-bg) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .gate-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(25px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 77, 141, 0.2);
+        }
+
+        #answer-input {
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--accent-pink);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            margin-top: 20px;
+            text-align: center;
+            outline: none;
+            width: 80%;
+        }
+
+        .btn-gate {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* CAPA CORAZONES */
         #light-background { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
         .heart-wrapper { position: absolute; width: 40px; height: 40px; opacity: 0.8; filter: drop-shadow(0 0 8px var(--accent-pink)); }
         .heart { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; background-color: var(--accent-pink); transform: translate(-50%, -50%) rotate(-45deg); border-radius: 2px; animation: heartbeat 2.2s infinite ease-in-out; }
@@ -41,7 +88,7 @@
             40% { transform: translate(-50%, -50%) rotate(-45deg) scale(1.2); opacity: 1; }
         }
 
-        /* NAVBAR FLOTANTE ESTILO MODERNO */
+        /* NAVBAR */
         .top-header { 
             position: fixed; 
             top: 20px; 
@@ -81,7 +128,6 @@
         .page.active { display: flex; animation: fadeIn 0.8s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TARJETAS DE CRISTAL (GLASSMORPHISM) */
         .card { 
             background: var(--glass-white); 
             backdrop-filter: blur(25px); 
@@ -107,12 +153,10 @@
         h3 { color: var(--accent-pink); margin-top: 30px; font-size: 1.4rem; }
         p { line-height: 1.8; font-weight: 300; opacity: 0.9; }
 
-        /* LISTA DE COMPROMISOS */
         .promises-list { text-align: left; max-width: 550px; margin: 30px auto; list-style: none; padding: 0; }
         .promises-list li { margin-bottom: 18px; font-size: 1.05rem; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
         .promises-list li::before { content: '❤'; color: var(--accent-pink); margin-right: 15px; font-size: 0.8rem; }
 
-        /* GALERÍA CON GLOW */
         .gallery-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
         .gallery-wall img { 
             width: 100%; 
@@ -124,13 +168,23 @@
         }
         .gallery-wall img:hover { transform: scale(1.05) translateY(-10px); box-shadow: 0 15px 30px rgba(255, 77, 141, 0.3); }
 
-        /* BOTONES DE ACCIÓN */
         .btn-si { background: var(--accent-pink); color: white; padding: 18px 50px; border-radius: 50px; font-size: 1.3rem; border: none; cursor: pointer; font-weight: bold; margin: 15px; box-shadow: 0 10px 20px rgba(255, 77, 141, 0.4); transition: 0.3s; }
         .btn-si:hover { transform: scale(1.1); box-shadow: 0 15px 30px rgba(255, 77, 141, 0.6); }
         #btn-no { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; margin: 15px; position: relative; }
     </style>
 </head>
 <body>
+    <div id="security-gate">
+        <div class="gate-card">
+            <h2 style="color: var(--accent-pink);">🔒 Solo para Gabi</h2>
+            <p>¿Cuál es tu apodo favorito para mi?</p>
+            <input type="text" id="answer-input" placeholder="Respuesta aquí...">
+            <br>
+            <button class="btn-gate" onclick="checkGate()">Entrar</button>
+            <p id="gate-error" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 15px; display: none;">Esa no es, hermosa. Pista: Es un clasico mexicano de la calle.</p>
+        </div>
+    </div>
+
     <div id="light-background"></div>
 
     <header class="top-header">
@@ -148,8 +202,8 @@
         <section id="inicio" class="page active">
             <div class="card">
                 <h1>Hola Gabi</h1>
-                <p style="text-align: center; font-size: 1.2rem;">Bienvenida a nuestro lugar especial en la web. 💗</p>
-                <p style="text-align: center;">Aquí cada línea de código está pensada para recordarte lo especial que eres para mí.</p>
+                <p style="text-align: center; font-size: 1.2rem;">Este es nuestro lugar en internet. 💗</p>
+                <p style="text-align: center;">Solo es para recordarte lo especial que eres para mí.</p>
             </div>
         </section>
 
@@ -157,22 +211,18 @@
             <div class="card" style="text-align: left;">
                 <h1>Nuestra Historia.</h1>
                 <p>Todo comenzó cuando entré a trabajar a FDR. Tú eras mi trainer y mi jefa. Todavía recuerdo perfectamente que el primer día me sentaron contigo para empezar mi entrenamiento.</p>
-                
-                <h3>Contra viento y marea</h3>
+                <h3>Contra todo pronóstico</h3>
                 <p>No fue fácil. Tuvimos que lidiar con alguien que provocaba problemas si nos veía hablando o estando juntos. Al final, fui despedido, pero eso no importó.</p>
-
                 <h3>Más que el trabajo</h3>
-                <p>Nuestra conexión fue mucho más fuerte que cualquier oficina. Seguimos saliendo, compartiendo noches de peda, tequila, música y pláticas interminables. Dibujamos juntos, exploramos lugares de comida y, recientemente, empezamos a crear nuestras propias recetas en la cocina.</p>
-
+                <p>Nuestra conexión fue mucho más fuerte que cualquier oficina. Seguimos saliendo, compartiendo noches de peda, tequila, música y pláticas interminables.</p>
                 <h3>Incondicional</h3>
-                <p>Incluso en el momento de mi despido, nunca me dejaste solo. Has estado ahí cada día, apoyándome emocional y financieramente. Sé que no he sido el hombre perfecto, pero quiero que sepas que cada día busco ser mejor para ti.</p>
+                <p>Incluso cuando me despidieron, nunca me dejaste solo. Has estado ahí cada día, apoyándome emocional e incondicionalmente.</p>
             </div>
         </section>
 
         <section id="comidas" class="page">
             <div class="card" style="max-width: 1000px;">
                 <h1>Nuestras Comidas 🍕</h1>
-                <p style="text-align: center;">Desde las famosas costillas hasta cada plato que hemos descubierto juntos.</p>
                 <div class="gallery-wall">
                     <img src="food/food0.jpg" alt="Comida">
                     <img src="food/food1.jpg" alt="Comida">
@@ -225,6 +275,27 @@
     </main>
 
     <script>
+        // Lógica de la Puerta de Seguridad
+        function checkGate() {
+            const input = document.getElementById('answer-input').value.toLowerCase().trim();
+            const gate = document.getElementById('security-gate');
+            const error = document.getElementById('gate-error');
+            
+            if (input === "street taco" || input === "street tacos") {
+                gate.style.opacity = "0";
+                setTimeout(() => {
+                    gate.style.visibility = "hidden";
+                }, 800);
+            } else {
+                error.style.display = "block";
+            }
+        }
+
+        // Permitir "Enter" en la entrada
+        document.getElementById('answer-input').addEventListener("keypress", (e) => {
+            if (e.key === "Enter") checkGate();
+        });
+
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(id);
