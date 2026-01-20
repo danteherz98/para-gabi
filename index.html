@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Gabi ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --deep-bg: #1a0f12;
+            --accent-pink: #ff4d8d;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-bright: #fff0f3;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-bright);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Fondo degradado profundo estilo noche */
+            background: radial-gradient(circle at center, #3d1f27 0%, var(--deep-bg) 100%);
+            background-attachment: fixed;
+        }
+
+        /* CAPA CORAZONES CON GLOW MEJORADO */
+        #light-background { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+        .heart-wrapper { position: absolute; width: 40px; height: 40px; opacity: 0.8; filter: drop-shadow(0 0 8px var(--accent-pink)); }
+        .heart { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; background-color: var(--accent-pink); transform: translate(-50%, -50%) rotate(-45deg); border-radius: 2px; animation: heartbeat 2.2s infinite ease-in-out; }
+        .heart::before, .heart::after { content: ""; position: absolute; width: 18px; height: 18px; background-color: var(--accent-pink); border-radius: 50%; }
+        .heart::before { top: -9px; left: 0; }
+        .heart::after { left: 9px; top: 0; }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: translate(-50%, -50%) rotate(-45deg) scale(1); opacity: 0.6; }
+            40% { transform: translate(-50%, -50%) rotate(-45deg) scale(1.2); opacity: 1; }
+        }
+
+        /* NAVBAR FLOTANTE ESTILO MODERNO */
+        .top-header { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.3); 
+            backdrop-filter: blur(15px); 
+            padding: 10px 25px; 
+            border-radius: 50px; 
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .top-header h2 { margin: 0; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-pink); }
+        .nav-links { display: flex; gap: 10px; margin-top: 5px; }
+        
+        .nav-links button { 
+            border: none; 
+            background: transparent; 
+            padding: 8px 12px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: #fff; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s; 
+        }
+        
+        .nav-links button:hover { color: var(--accent-pink); transform: translateY(-2px); }
+
+        /* SECCIONES */
+        .page { display: none; min-height: 100vh; padding: 120px 20px 60px; box-sizing: border-box; align-items: center; justify-content: center; position: relative; z-index: 10; }
+        .page.active { display: flex; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* TARJETAS DE CRISTAL (GLASSMORPHISM) */
+        .card { 
+            background: var(--glass-white); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 40px; 
+            padding: 50px 35px; 
+            max-width: 800px; 
+            width: 100%; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4); 
+        }
+        
+        h1 { 
+            font-size: 3rem; 
+            letter-spacing: -2px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            background: linear-gradient(to right, #fff, var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h3 { color: var(--accent-pink); margin-top: 30px; font-size: 1.4rem; }
+        p { line-height: 1.8; font-weight: 300; opacity: 0.9; }
+
+        /* LISTA DE COMPROMISOS */
+        .promises-list { text-align: left; max-width: 550px; margin: 30px auto; list-style: none; padding: 0; }
+        .promises-list li { margin-bottom: 18px; font-size: 1.05rem; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+        .promises-list li::before { content: '❤'; color: var(--accent-pink); margin-right: 15px; font-size: 0.8rem; }
+
+        /* GALERÍA CON GLOW */
+        .gallery-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+        .gallery-wall img { 
+            width: 100%; 
+            height: 250px; 
+            object-fit: cover; 
+            border-radius: 20px; 
+            transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1); 
+            border: 1px solid var(--glass-border);
+        }
+        .gallery-wall img:hover { transform: scale(1.05) translateY(-10px); box-shadow: 0 15px 30px rgba(255, 77, 141, 0.3); }
+
+        /* BOTONES DE ACCIÓN */
+        .btn-si { background: var(--accent-pink); color: white; padding: 18px 50px; border-radius: 50px; font-size: 1.3rem; border: none; cursor: pointer; font-weight: bold; margin: 15px; box-shadow: 0 10px 20px rgba(255, 77, 141, 0.4); transition: 0.3s; }
+        .btn-si:hover { transform: scale(1.1); box-shadow: 0 15px 30px rgba(255, 77, 141, 0.6); }
+        #btn-no { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 15px 40px; border-radius: 50px; cursor: pointer; font-weight: bold; margin: 15px; position: relative; }
+    </style>
+</head>
+<body>
+    <div id="light-background"></div>
+
+    <header class="top-header">
+        <h2>Para Gabi ❤️</h2>
+        <nav class="nav-links">
+            <button onclick="showPage('inicio')">Inicio</button>
+            <button onclick="showPage('historia')">Historia</button>
+            <button onclick="showPage('comidas')">Comidas</button>
+            <button onclick="showPage('galeria')">Galería</button>
+            <button onclick="accessPrivateSection()">Gabi y Yo</button>
+        </nav>
+    </header>
+
+    <main id="content">
+        <section id="inicio" class="page active">
+            <div class="card">
+                <h1>Hola Gabi</h1>
+                <p style="text-align: center; font-size: 1.2rem;">Bienvenida a nuestro lugar especial en la web. 💗</p>
+                <p style="text-align: center;">Aquí cada línea de código está pensada para recordarte lo especial que eres para mí.</p>
+            </div>
+        </section>
+
+        <section id="historia" class="page">
+            <div class="card" style="text-align: left;">
+                <h1>Nuestra Historia.</h1>
+                <p>Todo comenzó cuando entré a trabajar a FDR. Tú eras mi trainer y mi jefa. Todavía recuerdo perfectamente que el primer día me sentaron contigo para empezar mi entrenamiento.</p>
+                
+                <h3>Contra viento y marea</h3>
+                <p>No fue fácil. Tuvimos que lidiar con alguien que provocaba problemas si nos veía hablando o estando juntos. Al final, fui despedido, pero eso no importó.</p>
+
+                <h3>Más que el trabajo</h3>
+                <p>Nuestra conexión fue mucho más fuerte que cualquier oficina. Seguimos saliendo, compartiendo noches de peda, tequila, música y pláticas interminables. Dibujamos juntos, exploramos lugares de comida y, recientemente, empezamos a crear nuestras propias recetas en la cocina.</p>
+
+                <h3>Incondicional</h3>
+                <p>Incluso en el momento de mi despido, nunca me dejaste solo. Has estado ahí cada día, apoyándome emocional y financieramente. Sé que no he sido el hombre perfecto, pero quiero que sepas que cada día busco ser mejor para ti.</p>
+            </div>
+        </section>
+
+        <section id="comidas" class="page">
+            <div class="card" style="max-width: 1000px;">
+                <h1>Nuestras Comidas 🍕</h1>
+                <p style="text-align: center;">Desde las famosas costillas hasta cada plato que hemos descubierto juntos.</p>
+                <div class="gallery-wall">
+                    <img src="food/food0.jpg" alt="Comida">
+                    <img src="food/food1.jpg" alt="Comida">
+                    <img src="food/food2.jpg" alt="Comida">
+                    <img src="food/food3.jpg" alt="Comida">
+                    <img src="food/food4.jpg" alt="Comida">
+                    <img src="food/food5.jpg" alt="Comida">
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria" class="page">
+            <div class="card" style="max-width: 1000px;">
+                <h1>Nuestros Momentos</h1>
+                <div class="gallery-wall">
+                    <img src="img/gabi0.jpg" alt="Gabi">
+                    <img src="img/gabi1.jpg" alt="Gabi">
+                    <img src="img/gabi2.jpg" alt="Gabi">
+                    <img src="img/gabi3.jpg" alt="Gabi">
+                    <img src="img/gabi4.jpg" alt="Gabi">
+                    <img src="img/gabi5.jpg" alt="Gabi">
+                    <img src="img/gabi6.jpg" alt="Gabi">
+                </div>
+            </div>
+        </section>
+
+        <section id="gabi-yo" class="page">
+            <div class="card" id="final-card">
+                <h1>Gabi y Yo</h1>
+                <p style="text-align: center;">He preparado 10 compromisos que quiero hacerte hoy:</p>
+                <ul class="promises-list">
+                    <li>Ser tu apoyo incondicional en todo momento.</li>
+                    <li>Cuidarte en cada bache, así como tú lo has hecho conmigo.</li>
+                    <li>Seguir perfeccionando nuestras recetas y momentos en la cocina.</li>
+                    <li>Darte siempre mi mejor versión y trabajar en mis errores.</li>
+                    <li>Hacerte reír y buscar tu felicidad cada día.</li>
+                    <li>Escucharte y valorarte como mi jefa, mi trainer y mi compañera de vida.</li>
+                    <li>Respetar y apoyar cada uno de tus sueños y metas.</li>
+                    <li>Ser tu lugar seguro, así como tú eres el mío.</li>
+                    <li>Aprender y crecer a tu lado, sin importar los obstáculos.</li>
+                    <li>Darte amor infinito y honesto.</li>
+                </ul>
+                <div style="text-align: center; margin-top: 40px;">
+                    <h2 style="font-size: 2rem;">Gabi, ¿quieres ser mi novia? ❤️</h2>
+                    <button class="btn-si" onclick="celebrate()">¡SÍ!</button>
+                    <button id="btn-no">No</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(id);
+            if (target) target.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function accessPrivateSection() {
+            const pass = prompt("Introduce la clave secreta:");
+            if (pass && pass.toLowerCase() === "costillas") {
+                showPage('gabi-yo');
+            } else if (pass) {
+                alert("Acceso denegado. Solo Gabi tiene la llave.");
+            }
+        }
+
+        const btnNo = document.getElementById('btn-no');
+        btnNo.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+        });
+
+        function celebrate() {
+            confetti({ particleCount: 250, spread: 100, origin: { y: 0.6 } });
+            setTimeout(() => {
+                alert("¡Soy el más feliz! Gracias por todo, Gabi. ❤️");
+            }, 500);
+        }
+
+        window.onload = function() {
+            const bg = document.getElementById('light-background');
+            for (let i = 0; i < 50; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'heart-wrapper';
+                wrapper.style.left = Math.random() * 100 + 'vw';
+                wrapper.style.top = Math.random() * 100 + 'vh';
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                const scale = 0.4 + Math.random() * 0.8;
+                wrapper.style.transform = `scale(${scale})`;
+                heart.style.animationDelay = Math.random() * 3 + 's';
+                wrapper.appendChild(heart);
+                bg.appendChild(wrapper);
+            }
+        };
+    </script>
+</body>
+</html>
